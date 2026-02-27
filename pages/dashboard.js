@@ -48,9 +48,6 @@ export default function Dashboard() {
           <span className="font-bold text-xl text-indigo-600">TestiFy</span>
         </div>
         <div className="flex gap-4 items-center">
-          <Link href="/widget-editor" className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700">
-            🎨 Widget Editor
-          </Link>
           <span className="text-gray-600 text-sm">{session.user.email}</span>
           <Link href="/api/auth/signout" className="text-red-500 hover:text-red-600 text-sm">Sign Out</Link>
         </div>
@@ -87,25 +84,6 @@ export default function Dashboard() {
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
             <div className="text-gray-500 text-sm mb-1">Your Plan</div>
             <div className="text-lg font-bold text-indigo-600">Pro ✨</div>
-          </div>
-        </div>
-
-        {/* Widget Editor Promo */}
-        <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 text-white mb-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div>
-              <h2 className="text-2xl font-bold mb-2">🎨 NEW: Visual Widget Editor</h2>
-              <p className="text-white/90">
-                Customize your testimonial widget with our new visual editor. 
-                Choose from 6 widget types, customize colors, fonts, and see changes in real-time!
-              </p>
-            </div>
-            <Link 
-              href="/widget-editor"
-              className="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-white/90 transition whitespace-nowrap"
-            >
-              Open Widget Editor →
-            </Link>
           </div>
         </div>
 
