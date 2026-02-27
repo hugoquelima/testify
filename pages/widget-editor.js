@@ -170,9 +170,10 @@ export default function WidgetEditor() {
         </Link>
       </nav>
 
-      <div className="flex h-[calc(100vh-72px)]">
+      {/* Main Content */}
+      <div className="flex" style={{ height: 'calc(100vh - 73px)' }}>
         {/* Left Sidebar - Settings */}
-        <div className="w-96 bg-white border-r overflow-y-auto">
+        <div className="bg-white border-r flex-shrink-0" style={{ width: "384px", minWidth: "384px", overflowY: "auto" }}>
           {/* Tabs */}
           <div className="flex border-b">
             {['design', 'layout', 'effects', 'advanced'].map(tab => (
