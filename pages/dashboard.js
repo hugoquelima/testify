@@ -286,7 +286,7 @@ export default function Dashboard() {
                       {!t.approved && (
                         <button 
                           onClick={async () => {
-                            await fetch(`/api/testimonials/${t._id}/approve`, { method: 'POST' })
+                            await fetch(`/api/testimonials/${t._id}`, { method: 'POST' })
                             fetchTestimonials()
                           }}
                           className="bg-green-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-green-600"
