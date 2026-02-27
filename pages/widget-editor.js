@@ -213,9 +213,9 @@ export default function WidgetEditor() {
       </nav>
 
       {/* Main Content */}
-      <div className="flex" style={{ height: 'calc(100vh - 73px)' }}>
+      <div className="flex overflow-hidden" style={{ height: 'calc(100vh - 73px)' }}>
         {/* Left Sidebar - Settings */}
-        <div className="bg-white border-r flex-shrink-0" style={{ width: "384px", minWidth: "384px", overflowY: "auto" }}>
+        <div className="bg-white border-r flex-shrink-0" style={{ width: "320px" }}>
           {/* Tabs */}
           <div className="flex border-b">
             {['design', 'layout', 'effects', 'advanced'].map(tab => (
@@ -664,11 +664,12 @@ export default function WidgetEditor() {
           </div>
 
           {/* Preview Area */}
-          <div className="flex-1 overflow-auto p-8" style={{ backgroundColor: settings.backgroundColor }}>
+          <div className="flex-1 overflow-auto p-4" style={{ backgroundColor: settings.backgroundColor }}>
             <div 
               className="mx-auto transition-all duration-300"
               style={{ 
-                maxWidth: previewDevice === 'mobile' ? '375px' : previewDevice === 'tablet' ? '768px' : `${settings.maxWidth}px`,
+                maxWidth: previewDevice === 'mobile' ? '320px' : previewDevice === 'tablet' ? '600px' : '800px',
+                width: '100%',
                 margin: '0 auto'
               }}
             >
