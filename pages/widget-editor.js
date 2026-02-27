@@ -231,7 +231,7 @@ export default function SimpleWidgetEditor() {
               </button>
             </div>
             <code className="text-xs text-green-400 block">
-              <iframe src="https://testify-h6td.vercel.app/widget/{session.user.id}" width="100%" height="400"></iframe>
+              {'<iframe src="https://testify-h6td.vercel.app/widget/' + session?.user?.id + '" width="100%" height="400"></iframe>'}
             </code>
           </div>
 
