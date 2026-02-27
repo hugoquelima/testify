@@ -82,7 +82,7 @@ export default function Landing() {
               Start 7-Day Free Trial
             </button>
             
-            <p className="text-sm text-gray-500 mt-4">Cancel anytime. No credit card required.</p>
+            <p className="text-sm text-gray-500 mt-4">Credit card required. Cancel anytime.</p>
           </div>
         </div>
       </section>
