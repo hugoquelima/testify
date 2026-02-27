@@ -674,17 +674,20 @@ export default function WidgetEditor() {
               }}
             >
               {/* Widget Preview */}
-              <div 
-                className="grid"
-                style={{ 
-                  gap: `${settings.spacing}px`,
-                  gridTemplateColumns: settings.widgetType === 'grid' && previewDevice !== 'mobile' 
-                    ? `repeat(${settings.columns}, 1fr)` 
-                    : '1fr'
-                }}
-              
-              >
-                {(testimonials.length > 0 ? testimonials : sampleTestimonials).slice(0, parseInt(settings.maxTestimonials)).map((t) => (
+              <div style={{ padding: '20px 0' }}>
+                <p style={{ marginBottom: '15px', color: '#666', fontSize: '13px' }}>
+                  Showing {Math.min(parseInt(settings.maxTestimonials), sampleTestimonials.length)} sample testimonials
+                </p>
+                <div 
+                  style={{ 
+                    display: 'grid',
+                    gap: `${settings.spacing}px`,
+                    gridTemplateColumns: settings.widgetType === 'grid' && previewDevice !== 'mobile' 
+                      ? `repeat(${settings.columns}, 1fr)` 
+                      : '1fr'
+                  }}
+                >
+                  {sampleTestimonials.slice(0, parseInt(settings.maxTestimonials)).map((t) => (
                     <div
                       key={t._id}
                       className="testimonial-card transition-all duration-300"
