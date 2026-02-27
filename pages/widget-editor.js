@@ -107,10 +107,42 @@ export default function WidgetEditor() {
     }
   }, [session])
 
+  const sampleTestimonials = [
+    {
+      _id: 'sample1',
+      name: 'Sarah Johnson',
+      company: 'TechStart Inc.',
+      rating: 5,
+      text: 'TestiFy completely transformed how we collect customer feedback. Setup took 2 minutes and we got 10 testimonials in the first week!',
+      createdAt: new Date().toISOString(),
+      approved: true
+    },
+    {
+      _id: 'sample2',
+      name: 'Michael Chen',
+      company: 'DesignCo',
+      rating: 5,
+      text: 'Finally, a testimonial tool that just works. No complicated setup, no expensive monthly fees. Perfect for my agency.',
+      createdAt: new Date(Date.now() - 86400000).toISOString(),
+      approved: true
+    },
+    {
+      _id: 'sample3',
+      name: 'Emily Rodriguez',
+      company: 'Marketing Pro',
+      rating: 5,
+      text: 'We switched from Trustpilot and saved $200/month. TestiFy does everything we need at a fraction of the cost. Highly recommend!',
+      createdAt: new Date(Date.now() - 172800000).toISOString(),
+      approved: true
+    }
+  ]
+
   const fetchTestimonials = async () => {
     const res = await fetch('/api/testimonials')
     const data = await res.json()
-    setTestimonials(data.testimonials?.filter(t => t.approved) || [])
+    const realTestimonials = data.testimonials?.filter(t => t.approved) || []
+    // Use real testimonials if available, otherwise show samples
+    setTestimonials(realTestimonials.length > 0 ? realTestimonials : sampleTestimonials)
   }
 
   const handleSettingChange = (key, value) => {
