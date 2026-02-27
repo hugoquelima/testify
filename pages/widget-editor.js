@@ -673,22 +673,17 @@ export default function WidgetEditor() {
               }}
             >
               {/* Widget Preview */}
-              {testimonials.length === 0 ? (
-                <div className="text-center py-20">
-                  <div className="text-6xl mb-4">📝</div>
-                  <h3 className="text-xl font-semibold text-gray-400 mb-2">No testimonials yet</h3>
-                  <p className="text-gray-400">Add some testimonials to see the preview</p>
-                </div>
-              ) : (
-                <div 
-                  className={`grid gap-${settings.spacing} ${
-                    settings.widgetType === 'grid' 
-                      ? `grid-cols-${previewDevice === 'mobile' ? '1' : settings.columns}` 
-                      : 'grid-cols-1'
-                  }`}
-                  style={{ gap: `${settings.spacing}px` }}
-                >
-                  {testimonials.slice(0, parseInt(settings.maxTestimonials)).map((t, i) => (
+              <div 
+                className="grid"
+                style={{ 
+                  gap: `${settings.spacing}px`,
+                  gridTemplateColumns: settings.widgetType === 'grid' && previewDevice !== 'mobile' 
+                    ? `repeat(${settings.columns}, 1fr)` 
+                    : '1fr'
+                }}
+              
+              >
+                {(testimonials.length > 0 ? testimonials : sampleTestimonials).slice(0, parseInt(settings.maxTestimonials)).map((t) => (
                     <div
                       key={t._id}
                       className="testimonial-card transition-all duration-300"
@@ -768,7 +763,6 @@ export default function WidgetEditor() {
                     </div>
                   ))}
                 </div>
-              )}
             </div>
           </div>
 
