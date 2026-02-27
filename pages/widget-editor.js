@@ -47,7 +47,7 @@ export default function WidgetEditor() {
     widgetType: 'carousel',
     
     // Colors
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f3f4f6',
     cardBackgroundColor: '#ffffff',
     textColor: '#1f2937',
     authorColor: '#111827',
@@ -65,7 +65,7 @@ export default function WidgetEditor() {
     // Layout
     cardPadding: '24',
     borderRadius: '12',
-    borderWidth: '1',
+    borderWidth: '2',
     shadowIntensity: 'medium',
     maxWidth: '1200',
     columns: '3',
