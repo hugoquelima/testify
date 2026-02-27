@@ -1,0 +1,22 @@
+{
+  "name": "testify",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "stripe": "^14.0.0",
+    "@stripe/stripe-js": "^2.0.0",
+    "mongodb": "^6.0.0",
+    "next-auth": "^4.0.0",
+    "tailwindcss": "^3.0.0",
+    "autoprefixer": "^10.0.0",
+    "postcss": "^8.0.0"
+  }
+}
