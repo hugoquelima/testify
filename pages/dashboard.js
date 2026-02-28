@@ -7,7 +7,6 @@ export default function Dashboard() {
   const { data: session, status } = useSession()
   const [testimonials, setTestimonials] = useState([])
   const [showOnboarding, setShowOnboarding] = useState(true)
-  const [activeTab, setActiveTab] = useState('overview')
 
   useEffect(() => {
     if (session?.user?.id) {
@@ -21,18 +20,34 @@ export default function Dashboard() {
     setTestimonials(data.testimonials || [])
   }
 
-  const collectionUrl = session?.user?.id 
+  const collectionUrl = session?.user?.id
     ? `${typeof window !== 'undefined' ? window.location.origin : ''}/collect/${session.user.id}`
     : ''
 
   const widgetCode = session?.user?.id
-    ? `<iframe 
-  src="${typeof window !== 'undefined' ? window.location.origin : ''}/widget/${session.user.id}" 
-  width="100%" 
-  height="400"
-  frameborder="0"
-></iframe>`
+    ? `<iframe\n  src="${typeof window !== 'undefined' ? window.location.origin : ''}/widget/${session.user.id}"\n  width="100%"\n  height="400"\n  frameborder="0"\n></iframe>`
     : ''
+
+  const exportCSV = () => {
+    const headers = ['Name', 'Email', 'Company', 'Rating', 'Testimonial', 'Status', 'Date']
+    const rows = testimonials.map(t => [
+      t.name,
+      t.email || '',
+      t.company || '',
+      t.rating,
+      `"${(t.text || '').replace(/"/g, '""')}"`,
+      t.approved ? 'Published' : 'Pending',
+      new Date(t.createdAt).toLocaleDateString()
+    ])
+    const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n')
+    const blob = new Blob([csv], { type: 'text/csv' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'testimonials.csv'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
 
   if (status === 'loading') return <div className="min-h-screen flex items-center justify-center">Loading...</div>
   if (!session) return <div className="min-h-screen flex items-center justify-center">Please sign in</div>
@@ -40,15 +55,24 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Head><title>Dashboard | TestiFy</title></Head>
-      
+
       {/* Navigation */}
       <nav className="bg-white border-b px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <span className="text-2xl">💬</span>
           <span className="font-bold text-xl text-indigo-600">TestiFy</span>
         </div>
-        <div className="flex gap-4 items-center">
-          <span className="text-gray-600 text-sm">{session.user.email}</span>
+        <div className="flex gap-3 items-center">
+          <Link href="/testimonials" className="text-gray-600 hover:text-gray-900 text-sm font-medium">
+            📋 Testimonials
+          </Link>
+          <Link
+            href="/widget-editor"
+            className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-700"
+          >
+            🎨 Widget Editor
+          </Link>
+          <span className="text-gray-600 text-sm hidden md:block">{session.user.email}</span>
           <Link href="/api/auth/signout" className="text-red-500 hover:text-red-600 text-sm">Sign Out</Link>
         </div>
       </nav>
@@ -61,29 +85,44 @@ export default function Dashboard() {
         </div>
 
         {/* Quick Stats */}
-        <div className="grid md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
             <div className="text-gray-500 text-sm mb-1">Total Testimonials</div>
             <div className="text-3xl font-bold text-gray-900">{testimonials.length}</div>
           </div>
-
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
             <div className="text-gray-500 text-sm mb-1">Published</div>
             <div className="text-3xl font-bold text-green-600">
               {testimonials.filter(t => t.approved).length}
             </div>
           </div>
-
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
             <div className="text-gray-500 text-sm mb-1">Pending Review</div>
             <div className="text-3xl font-bold text-orange-500">
               {testimonials.filter(t => !t.approved).length}
             </div>
           </div>
-
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
             <div className="text-gray-500 text-sm mb-1">Your Plan</div>
             <div className="text-lg font-bold text-indigo-600">Pro ✨</div>
+          </div>
+        </div>
+
+        {/* Widget Editor Banner */}
+        <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 text-white mb-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-bold mb-2">🎨 NEW: Visual Widget Editor</h2>
+              <p className="text-white/90">
+                Customize your testimonial widget with our new visual editor. Choose from 6 widget types, customize colors, fonts, and see changes in real-time!
+              </p>
+            </div>
+            <Link
+              href="/widget-editor"
+              className="bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-white/90 transition whitespace-nowrap"
+            >
+              Open Widget Editor →
+            </Link>
           </div>
         </div>
 
@@ -95,27 +134,21 @@ export default function Dashboard() {
                 <h2 className="text-xl font-bold">🚀 Get Started in 3 Steps</h2>
                 <p className="text-white/80">Complete these steps to start collecting testimonials</p>
               </div>
-              <button 
-                onClick={() => setShowOnboarding(false)}
-                className="text-white/60 hover:text-white"
-              >
+              <button onClick={() => setShowOnboarding(false)} className="text-white/60 hover:text-white">
                 ✕
               </button>
             </div>
-            
             <div className="grid md:grid-cols-3 gap-4">
               <div className="bg-white/10 rounded-lg p-4">
                 <div className="text-2xl mb-2">1️⃣</div>
                 <div className="font-semibold mb-1">Share Your Link</div>
                 <p className="text-sm text-white/80">Copy your collection URL and send it to customers</p>
               </div>
-              
               <div className="bg-white/10 rounded-lg p-4">
                 <div className="text-2xl mb-2">2️⃣</div>
                 <div className="font-semibold mb-1">Collect Reviews</div>
                 <p className="text-sm text-white/80">Customers submit testimonials through your branded form</p>
               </div>
-              
               <div className="bg-white/10 rounded-lg p-4">
                 <div className="text-2xl mb-2">3️⃣</div>
                 <div className="font-semibold mb-1">Display Widget</div>
@@ -134,17 +167,14 @@ export default function Dashboard() {
                 <span className="text-2xl">🔗</span>
                 <h2 className="text-xl font-semibold">Your Collection Link</h2>
               </div>
-              
               <p className="text-gray-600 mb-4">
                 Share this link with your customers to collect testimonials. They'll see a branded form.
               </p>
-              
               <div className="bg-gray-100 rounded-lg p-3 mb-4">
                 <code className="text-sm break-all">{collectionUrl}</code>
               </div>
-              
               <div className="flex gap-2">
-                <button 
+                <button
                   onClick={() => {
                     navigator.clipboard.writeText(collectionUrl)
                     alert('Copied to clipboard!')
@@ -153,7 +183,7 @@ export default function Dashboard() {
                 >
                   Copy Link
                 </button>
-                <a 
+                <a
                   href={collectionUrl}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -169,7 +199,6 @@ export default function Dashboard() {
                 <span className="text-2xl">💡</span>
                 <h2 className="text-xl font-semibold">Pro Tips</h2>
               </div>
-              
               <ul className="space-y-3 text-gray-600">
                 <li className="flex gap-2">
                   <span>✅</span>
@@ -198,17 +227,14 @@ export default function Dashboard() {
                 <span className="text-2xl">🎨</span>
                 <h2 className="text-xl font-semibold">Website Widget</h2>
               </div>
-              
               <p className="text-gray-600 mb-4">
                 Copy this code and paste it into your website to display testimonials. Works with any site!
               </p>
-              
               <div className="bg-gray-900 rounded-lg p-4 mb-4 overflow-x-auto">
                 <pre className="text-sm text-green-400">{widgetCode}</pre>
               </div>
-              
               <div className="flex gap-2">
-                <button 
+                <button
                   onClick={() => {
                     navigator.clipboard.writeText(widgetCode)
                     alert('Widget code copied!')
@@ -225,11 +251,8 @@ export default function Dashboard() {
                 <span className="text-2xl">🎯</span>
                 <h3 className="text-lg font-semibold">What is TestiFy?</h3>
               </div>
-              
               <p className="text-white/90 text-sm">
-                TestiFy helps you collect, manage, and display customer testimonials. 
-                Use social proof to convert more visitors into customers. 
-                Simple setup, powerful results.
+                TestiFy helps you collect, manage, and display customer testimonials. Use social proof to convert more visitors into customers. Simple setup, powerful results.
               </p>
             </div>
           </div>
@@ -237,14 +260,32 @@ export default function Dashboard() {
 
         {/* Recent Testimonials */}
         <div className="mt-8">
-          <h2 className="text-2xl font-semibold mb-4">Recent Testimonials</h2>
-          
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-semibold">Recent Testimonials</h2>
+            <div className="flex gap-3">
+              {testimonials.length > 0 && (
+                <button
+                  onClick={exportCSV}
+                  className="text-sm text-gray-600 border border-gray-200 px-3 py-1.5 rounded-lg hover:bg-gray-50"
+                >
+                  ⬇ Export CSV
+                </button>
+              )}
+              <Link
+                href="/testimonials"
+                className="text-sm text-indigo-600 border border-indigo-200 px-3 py-1.5 rounded-lg hover:bg-indigo-50"
+              >
+                View All →
+              </Link>
+            </div>
+          </div>
+
           {testimonials.length === 0 ? (
             <div className="bg-white rounded-xl p-12 text-center border-2 border-dashed border-gray-200">
               <div className="text-6xl mb-4">📝</div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">No testimonials yet</h3>
               <p className="text-gray-600 mb-6">Share your collection link to start gathering testimonials!</p>
-              <button 
+              <button
                 onClick={() => {
                   navigator.clipboard.writeText(collectionUrl)
                   alert('Collection link copied!')
@@ -256,9 +297,9 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {testimonials.map((t) => (
-                <div 
-                  key={t._id} 
+              {testimonials.slice(0, 4).map((t) => (
+                <div
+                  key={t._id}
                   className={`bg-white rounded-xl p-6 shadow-sm border-l-4 ${t.approved ? 'border-green-500' : 'border-orange-500'}`}
                 >
                   <div className="flex justify-between items-start mb-3">
@@ -271,20 +312,16 @@ export default function Dashboard() {
                         {t.company && <div className="text-sm text-gray-500">{t.company}</div>}
                       </div>
                     </div>
-                    
                     <span className="text-yellow-500 text-lg">{'★'.repeat(t.rating)}</span>
                   </div>
-                  
                   <p className="text-gray-700 mb-3">{t.text}</p>
-                  
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-500">
                       {new Date(t.createdAt).toLocaleDateString()}
                     </span>
-                    
                     <div className="flex gap-2">
                       {!t.approved && (
-                        <button 
+                        <button
                           onClick={async () => {
                             await fetch(`/api/testimonials/${t._id}`, { method: 'POST' })
                             fetchTestimonials()
@@ -294,7 +331,7 @@ export default function Dashboard() {
                           Approve
                         </button>
                       )}
-                      <button 
+                      <button
                         onClick={async () => {
                           await fetch(`/api/testimonials/${t._id}`, { method: 'DELETE' })
                           fetchTestimonials()
@@ -307,6 +344,14 @@ export default function Dashboard() {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+
+          {testimonials.length > 4 && (
+            <div className="text-center mt-6">
+              <Link href="/testimonials" className="text-indigo-600 hover:underline font-medium">
+                View all {testimonials.length} testimonials →
+              </Link>
             </div>
           )}
         </div>
