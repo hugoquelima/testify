@@ -182,9 +182,9 @@ export default function WidgetEditor() {
         </Link>
       </nav>
 
-      <div className="flex" style={{ height: 'calc(100vh - 65px)' }}>
+      <div className="flex flex-col lg:flex-row" style={{ height: 'calc(100vh - 65px)' }}>
         {/* Left Panel - Editor */}
-        <div className="w-96 bg-white border-r overflow-y-auto">
+        <div className="w-full lg:w-80 bg-white border-b lg:border-b-0 lg:border-r overflow-y-auto flex-shrink-0">
           {/* Templates */}
           <div className="p-6 border-b">
             <h3 className="text-sm font-semibold text-gray-700 mb-3">Quick Templates</h3>
@@ -363,7 +363,7 @@ export default function WidgetEditor() {
         </div>
 
         {/* Right Panel - Preview */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-h-0">
           {/* Preview Header */}
           <div className="bg-white border-b px-6 py-4 flex justify-between items-center">
             <h2 className="font-semibold text-gray-900">Live Preview</h2>

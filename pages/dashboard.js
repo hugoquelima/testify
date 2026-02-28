@@ -53,7 +53,7 @@ export default function Dashboard() {
         </div>
       </nav>
 
-      <main className="container mx-auto px-6 py-8">
+      <main className="container mx-auto px-4 md:px-6 py-6 md:py-8">
         {/* Welcome Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Welcome back, {session.user.name || 'there'}! 👋</h1>
@@ -126,7 +126,7 @@ export default function Dashboard() {
         )}
 
         {/* Two Column Layout */}
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           {/* Left Column - Collection Link */}
           <div className="space-y-6">
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
@@ -255,7 +255,7 @@ export default function Dashboard() {
               </button>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {testimonials.map((t) => (
                 <div 
                   key={t._id} 
